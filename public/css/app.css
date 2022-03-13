@@ -11,10 +11,209 @@ html {
 body {
   font-size: 1.6rem;
   font-family: "Inter", sans-serif;
+  background-color: #fcfcfc;
+  min-height: 100vh;
 }
 
 a {
   display: inline-block;
   color: inherit;
   text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  justify-content: space-between;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  left: 0;
+  background-color: inherit;
+}
+@media only screen and (min-width: 768px) {
+  .nav {
+    padding: 0 5%;
+  }
+}
+@media only screen and (min-width: 992px) {
+  .nav {
+    padding: 0 5%;
+  }
+}
+.nav .links {
+  display: none;
+  gap: 1rem;
+}
+.nav .controls {
+  align-items: center;
+  display: flex;
+  gap: 2rem;
+}
+.nav .controls .account {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: none;
+  background-color: #f1f3f4;
+}
+.nav .controls .create {
+  background-color: #3278ff;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  color: #fff;
+  text-transform: capitalize;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  display: none;
+}
+.nav .controls .create:hover {
+  background-color: #4c89ff;
+  transition: all 0.2s ease;
+}
+@media only screen and (min-width: 768px) {
+  .nav .controls .create {
+    display: inline-block;
+  }
+}
+.nav .controls .btn {
+  font-size: 2rem;
+}
+.nav .controls .search {
+  display: none;
+}
+@media only screen and (min-width: 768px) {
+  .nav .controls .search {
+    display: inline-block;
+  }
+}
+.nav .menu-btn {
+  width: 2.5rem;
+  text-align: center;
+}
+.nav .menu-btn i:last-of-type {
+  display: none;
+}
+.nav .menu-btn--open i:first-of-type {
+  display: none;
+}
+.nav .menu-btn--open i:last-of-type {
+  display: inline-block;
+}
+.nav .menu-mobile {
+  display: none;
+  padding: 0 1rem;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  height: 90vh;
+  background-color: #e3e3e3;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  gap: 2rem;
+  flex-direction: column;
+}
+@media only screen and (min-width: 768px) {
+  .nav .menu-mobile {
+    padding: 0 5%;
+  }
+}
+@media only screen and (min-width: 992px) {
+  .nav .menu-mobile {
+    padding: 0 5%;
+  }
+}
+.nav .menu-mobile--open {
+  display: flex;
+}
+@media only screen and (min-width: 768px) {
+  .nav .menu-mobile--open {
+    display: none;
+  }
+}
+.nav .menu-mobile .search {
+  display: flex;
+  background-color: #f1f3f4;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.2);
+  align-items: center;
+  padding: 0 1rem;
+  font-size: 1.8rem;
+}
+.nav .menu-mobile .search span {
+  opacity: 0.5;
+}
+.nav .menu-mobile .search input {
+  border: none;
+  flex: 1;
+  padding: 1rem;
+  background-color: inherit;
+}
+.nav .menu-mobile .search input:focus {
+  outline: none;
+}
+.nav .menu-mobile .create {
+  background-color: #3278ff;
+  color: #f1f3f4;
+  padding: 1rem;
+  width: 100%;
+  text-align: center;
+  border-radius: 0.5rem;
+  text-transform: capitalize;
+  font-weight: 500;
+}
+.nav .menu-mobile__links {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  text-transform: capitalize;
+  font-weight: bold;
+  font-size: 2rem;
+  flex: 1;
+  gap: 2rem;
+  justify-content: center;
+}
+.nav .menu-mobile__links .link {
+  opacity: 0.5;
+}
+.nav .menu-mobile__links .link--active {
+  opacity: 1;
+}
+.nav .menu-mobile__account {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.nav .menu-mobile__account .avatar {
+  width: 4rem;
+  height: 4rem;
+  background-color: #f1f3f4;
+  border-radius: 50%;
+}
+.nav .menu-mobile__account .details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 1.4rem;
+}
+.nav .menu-mobile__account .details .name {
+  text-transform: capitalize;
+  font-weight: 500;
+}
+.nav .menu-mobile__account .details .settings {
+  font-size: 1.4rem;
+  opacity: 0.5;
+}
+.nav .menu-mobile__account .logout {
+  margin-left: auto;
+  padding: 1rem;
+}
+
+.layout {
+  background-color: red;
 }
