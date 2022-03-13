@@ -1,0 +1,103 @@
+@use "../abstracts" as *;
+
+.projects {
+    display: grid;
+    gap: 3rem;
+    @include tablet {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    @include desktop {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    @include extra-lg-desktop {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .card {
+        display: flex;
+        gap: 1rem;
+        flex-direction: column;
+
+        &__preview {
+            height: 20rem;
+            background-color: $secondary-bg-color;
+            border-radius: .5rem;
+            overflow: hidden;
+            position: relative;
+            @include desktop {
+                height: 25rem;
+            }
+            @include extra-lg-desktop {
+                height: 22rem;
+            }
+
+            &:after {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: 0;
+                background-color: black;
+                opacity: .04;
+                border-radius: inherit;
+                @include size(100%);
+
+            }
+
+
+            img {
+                @include size(100%);
+                object-fit: cover;
+                @include desktop {
+                    object-fit: fill;
+                }
+            }
+        }
+
+        &__details {
+            display: flex;
+            align-items: center;
+
+            .avatar {
+                @include size(2.5rem);
+                background-color: $secondary-bg-color;
+                border-radius: 50%;
+                overflow: hidden;
+
+                img {
+                    @include size(100%);
+                    object-fit: cover;
+                }
+            }
+
+            .name {
+                font-size: 1.4rem;
+                font-weight: 500;
+                margin-left: 1rem;
+            }
+
+            .more {
+                margin-left: auto;
+                font-size: 1.4rem;
+                color: $secondary-color;
+
+                .likes {
+                    display: flex;
+                    gap: .5rem;
+                    align-items: center;
+
+
+                    .like {
+                        transition: all .2s ease;
+                        cursor: pointer;
+
+                        &:hover {
+                            transform: scale(1.1);
+                            color: $like-color;
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+}

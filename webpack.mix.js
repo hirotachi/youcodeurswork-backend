@@ -10,9 +10,13 @@ const mix = require('laravel-mix');
  | file for the application as well as bundling up all the JS files.
  |
  */
+const files = ["app", "pages/home"];
 
 mix.js('resources/js/app.js', 'public/js')
-    .sass("resources/sass/app.scss", "public/css", [])
+
+files.forEach(file => {
+    mix.sass(`resources/sass/${file}.scss`, "public/css", [])
+})
 
 
 mix.browserSync({proxy: '127.0.0.1:8000', notify: false});
