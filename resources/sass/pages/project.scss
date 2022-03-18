@@ -1,0 +1,150 @@
+@use "../abstracts" as *;
+
+
+.project {
+    @include normalizePadding;
+    margin-top: 4rem;
+    @include tablet {
+        padding: 0 10%;
+    }
+    @include desktop {
+        padding: 0 20%;
+    }
+
+    .header {
+        padding: 0 1rem;
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        @include tablet {
+            gap: 2rem;
+            padding: 0;
+        }
+
+        .avatar {
+            @include size(4rem);
+            background-color: $secondary-bg-color;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 1px solid $secondary-bg-color;
+
+            @include tablet {
+                @include size(5rem);
+
+            }
+
+            img {
+                @include size(100%);
+                object-fit: cover;
+            }
+        }
+
+        .details {
+            .title {
+                font-weight: bold;
+                font-size: 1.5rem;
+            }
+
+            .user {
+                opacity: .6;
+                font-size: 1.3rem;
+            }
+        }
+
+        .controls {
+            margin-left: auto;
+
+            button {
+                cursor: pointer;
+                padding: 1rem 1.2rem;
+                background-color: $secondary-bg-color;
+                border: none;
+                border-radius: .5rem;
+                display: flex;
+                gap: 1rem;
+                align-items: center;
+                text-transform: capitalize;
+                font-weight: 500;
+                transition: all .2s ease;
+
+                &:hover {
+                    background-color: darken($secondary-bg-color, 5%);
+                }
+
+                @include desktop {
+                    padding: 1rem 1.5rem;
+                }
+
+                i {
+                    font-size: 1.6rem;
+                }
+
+            }
+        }
+    }
+
+    .main {
+        margin-top: 2rem;
+        display: flex;
+        gap: 1rem;
+        flex-direction: column;
+
+        .previews {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+
+            &_main {
+                overflow: hidden;
+                border-radius: .5rem;
+                height: 25rem;
+                background-color: $secondary-bg-color;
+
+                @include tablet {
+                    height: 50rem;
+                }
+
+                img {
+                    @include size(100%);
+                    object-fit: cover;
+                }
+            }
+
+            &_other {
+                overflow-x: scroll;
+
+                @include tablet {
+                    overflow-x: unset;
+                }
+
+                &_content {
+                    display: flex;
+                    gap: 3rem;
+                    width: fit-content;
+                    justify-content: center;
+                    @include tablet {
+                        width: unset;
+                    }
+                }
+
+                .card {
+                    display: inline-block;
+                    width: 15rem;
+                    height: 13rem;
+                    background-color: $secondary-bg-color;
+                    border-radius: .5rem;
+                    overflow: hidden;
+                }
+            }
+        }
+
+        .description {
+            margin-top: 1rem;
+            text-align: center;
+
+            a {
+                color: lighten($primary-color, 10%);
+            }
+        }
+    }
+}
