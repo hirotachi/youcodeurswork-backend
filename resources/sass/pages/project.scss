@@ -10,6 +10,9 @@
     @include desktop {
         padding: 0 20%;
     }
+    @include extra-lg-desktop {
+        padding: 0 25%;
+    }
 
     .header {
         padding: 0 1rem;
@@ -101,7 +104,7 @@
                 background-color: $secondary-bg-color;
 
                 @include tablet {
-                    height: 50rem;
+                    height: clamp(50rem, 35vw, 75rem);
                 }
 
                 img {
@@ -111,29 +114,35 @@
             }
 
             &_other {
-                overflow-x: scroll;
-
-                @include tablet {
-                    overflow-x: unset;
-                }
-
-                &_content {
-                    display: flex;
-                    gap: 3rem;
-                    width: fit-content;
-                    justify-content: center;
-                    @include tablet {
-                        width: unset;
-                    }
+                display: flex;
+                gap: 1rem;
+                justify-content: center;
+                margin-top: 2rem;
+                @include desktop {
+                    gap: 2rem;
                 }
 
                 .card {
-                    display: inline-block;
-                    width: 15rem;
-                    height: 13rem;
+                    @include size(10rem, 7rem);
                     background-color: $secondary-bg-color;
                     border-radius: .5rem;
-                    overflow: hidden;
+                    font-size: 1.2rem;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    img {
+                        @include size(100%);
+                        object-fit: cover;
+                        border-radius: inherit;
+                    }
+
+                    &-selected {
+                        img {
+                            border: 2px solid $primary-color;
+                        }
+                    }
+
                 }
             }
         }
