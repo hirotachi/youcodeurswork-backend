@@ -18,9 +18,6 @@ Route::get('/', function () {
     return view("pages.home");
 });
 
-Route::resource("projects", ProjectController::class);
+Route::resource('projects', ProjectController::class);
 
-//Route::get("/projects/{id}", function () {
-//    return view("pages.project");
-//});
 

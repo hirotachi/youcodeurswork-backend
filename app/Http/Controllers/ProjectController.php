@@ -15,7 +15,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-
+        return view("pages.home", ["projects" => Project::query()->paginate(10)]);
     }
 
     /**
@@ -25,7 +25,7 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        //
+        return view("pages.manage-project");
     }
 
     /**
@@ -36,7 +36,9 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request)
     {
-        //
+        $project = Project::query()->create($request->input(["name"]));
+        $project->save();
+//        todo: add view page to redirect to
     }
 
     /**
@@ -47,8 +49,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        
-        return view("pages.project");
+        return view("pages.project", ["project" => $project]);
     }
 
     /**
@@ -59,7 +60,7 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        //
+        return view("pages.manage-project", ["project" => $project]);
     }
 
     /**
@@ -71,7 +72,7 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project)
     {
-        //
+        return $project->update(["name" => $request->input("name")]);
     }
 
     /**
@@ -83,5 +84,6 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         //
+        return $project->delete();
     }
 }
