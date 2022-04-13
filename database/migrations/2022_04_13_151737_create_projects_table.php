@@ -22,7 +22,6 @@ return new class extends Migration {
             $table->enum('status', ['ACCEPTED', 'REJECTED', 'PENDING']);
             $table->string('repoLink');
             $table->json('collaboratorsIds');
-            $table->foreignId('instructorId')->constrained("instructors");
             $table->timestamps();
         });
     }
