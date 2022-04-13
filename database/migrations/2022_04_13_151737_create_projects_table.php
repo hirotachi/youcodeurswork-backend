@@ -18,10 +18,10 @@ return new class extends Migration {
             $table->text('description');
             $table->json('tags');
             $table->json("technologies");
-            $table->foreignId('authorId')->constrained("students");
+            $table->foreignId('authorId')->constrained("students")->cascadeOnDelete();
             $table->enum('status', ['ACCEPTED', 'REJECTED', 'PENDING']);
             $table->string('repoLink');
-            $table->json('collaboratorsIds');
+            $table->foreignId('instructorId')->constrained("instructors")->nullOnDelete();
             $table->timestamps();
         });
     }
