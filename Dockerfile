@@ -8,3 +8,5 @@ RUN apk update && apk add \
     vim
 
 RUN docker-php-ext-install pdo pdo_mysql
+
+

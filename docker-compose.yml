@@ -15,32 +15,35 @@ services:
         restart: always
         ports:
             - "8080:80"
+            - "443:443"
         volumes:
             - .:/var/www
             - ./nginx:/etc/nginx/conf.d
     mysql:
         image: mysql:latest
         ports:
-            - '${FORWARD_DB_PORT:-3307}:3306'
+            - '${DB_PORT:-3306}:3306'
         environment:
-            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD:-root}'
+            MYSQL_ROO_USER: '${DB_USERNAME:-root}'
             MYSQL_ROOT_HOST: '%'
             MYSQL_DATABASE: '${DB_DATABASE}'
-            MYSQL_USER: '${DB_USERNAME}'
-            MYSQL_PASSWORD: '${DB_PASSWORD}'
             MYSQL_ALLOW_EMPTY_PASSWORD: 1
         volumes:
-            - dbdata:/var/lib/mysql
+            - youcodeursdata:/var/lib/mysql
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
         links:
             - mysql
         environment:
-            PMA_HOST: '${DB_HOST_DOCKER}'
-            PMA_PORT: '${FORWARD_DB_PORT:-3307}'
+            PMA_HOST: '%'
+            PMA_PORT: '${DB_PORT:-3306}'
+            PMA_USER: '${DB_USERNAME}'
+            PMA_PASSWORD: '${DB_PASSWORD}'
+            PMA_DATABASE: '${DB_DATABASE}'
             PMA_ARBITRARY: 1
         restart: always
         ports:
-            - "8090:80"
+            - "8000:80"
 volumes:
-    dbdata:
+    youcodeursdata:

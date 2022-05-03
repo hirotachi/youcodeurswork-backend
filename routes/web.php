@@ -13,9 +13,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return "nice";
+Route::get('/', function (Request $request) {
+    return "hello world";
 });
+
+
+
 
 
 
