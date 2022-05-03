@@ -7,6 +7,8 @@ services:
             dockerfile: Dockerfile
         container_name: youcoderswork-app
         restart: always
+        environment:
+            - RUNNING_IN_DOCKER=true
         volumes:
             - .:/var/www
     nginx:
@@ -36,7 +38,7 @@ services:
         links:
             - mysql
         environment:
-            PMA_HOST: '%'
+            PMA_HOST: '${DB_DOCKER_HOST:-mysql}'
             PMA_PORT: '${DB_PORT:-3306}'
             PMA_USER: '${DB_USERNAME}'
             PMA_PASSWORD: '${DB_PASSWORD}'
