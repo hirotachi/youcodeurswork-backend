@@ -38,7 +38,7 @@ Route::middleware("auth:sanctum")->group(function () use ($freeResourceRoutes) {
     Route::get("/projects/{project}/like", [\App\Http\Controllers\ProjectController::class, "like"]);
     Route::get("/myprojects",
         [\App\Http\Controllers\UserController::class, "myProjects"])->middleware("role:admin|student");
-
+    Route::put("/me", [\App\Http\Controllers\UserController::class, "updateProfile"]);
 });
 
 

@@ -18,15 +18,18 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|string|email|unique:users',
-            'password' => 'required|string'
+            'password' => 'required|string',
+            "role" => "required|string|in:student,recruiter"
         ]);
 
 
         $user = new User([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->password),
+            "role" => $request->role
         ]);
+        
         $user->save();
         $token = $user->createToken("access_token")->plainTextToken;
 

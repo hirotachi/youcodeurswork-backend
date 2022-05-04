@@ -22,8 +22,9 @@ class UserResource extends JsonResource
             "site" => $this->site,
             "avatar" => $this->avatar,
             "description" => $this->description,
-            "social_accounts" => $this->social_accounts,
+            "social_accounts" => json_decode($this->social_accounts),
             "headline" => $this->headline,
+            "role" => $this->role,
         ];
     }
 }
