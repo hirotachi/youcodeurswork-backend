@@ -3,13 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileRequest;
+use App\Http\Resources\JobCollection;
 use App\Http\Resources\ProjectCollection;
 
 class UserController extends Controller
 {
-    public function myProjects()
+    public function projects()
     {
         return new ProjectCollection(auth()->user()->projects);
+    }
+
+    public function jobs()
+    {
+        return new JobCollection(auth()->user()->jobs);
     }
 
     public function updateProfile(ProfileRequest $request)

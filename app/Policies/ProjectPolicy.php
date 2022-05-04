@@ -33,6 +33,6 @@ class ProjectPolicy
 
     public function forceDelete(User $user, Project $project): bool
     {
-        return $user->id === $project->user_id || ($user->is_admin ?? false);
+        return $user->id === $project->user_id || ($user->role === 'admin');
     }
 }

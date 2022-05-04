@@ -17,14 +17,11 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
             "site" => $this->site,
             "avatar" => $this->avatar,
             "description" => $this->description,
             "social_accounts" => json_decode($this->social_accounts),
-            "headline" => $this->headline,
-            "role" => $this->role,
+            "headline" => $this->headline ?? $this->role,
         ];
     }
 }

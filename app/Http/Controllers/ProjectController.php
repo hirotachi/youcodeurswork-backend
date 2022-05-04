@@ -7,8 +7,6 @@ use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Resources\ProjectCollection;
 use App\Http\Resources\ProjectResource;
 use App\Models\Project;
-use App\Models\Tag;
-use App\Models\Technology;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +14,8 @@ use function PHPUnit\Framework\stringContains;
 
 class ProjectController extends Controller
 {
+
+    static public string $role = 'student';
 
     public function index()
     {
@@ -43,9 +43,10 @@ class ProjectController extends Controller
     {
         try {
             DB::beginTransaction();
-            $project = Project::create($request->validated());
-            self::associateData($project, "tags", $request);
-            self::associateData($project, "technologies", $request);
+
+            $project = Project::create($this->normalizeData($request->validated()));
+            AssociationController::associateData($project, "tags", $request);
+            AssociationController::associateData($project, "technologies", $request);
             DB::commit();
             return response()->json([
                 'message' => 'success',
@@ -60,33 +61,14 @@ class ProjectController extends Controller
         }
     }
 
-    static public function associateData($project, $key, $request)
+    private function normalizeData($data)
     {
-        $data = $request->validated($key);
-        if ($data === null) {
-            return;
+        if (isset($data["images"]) && !is_string($data["images"])) {
+            $data["images"] = json_encode($data["images"]);
         }
-        if (count($data) === 0) {
-            $project->{$key}()->sync($data);
-            return;
-        }
-        $data = array_map(function ($item) {
-            return ["name" => strtolower(trim($item, " "))];
-        }, $data);
-
-        $request->offsetUnset($key);
-        if ($key === 'tags') {
-            Tag::upsert($data, ['name']);
-            $data = Tag::whereIn('name', $data)->get();
-        } else {
-            if ($key === 'technologies') {
-                Technology::upsert($data, ['name']);
-                $data = Technology::whereIn('name', $data)->get();
-            }
-        }
-        $ids = $data->pluck('id')->toArray();
-        $project->{$key}()->sync($ids);
+        return $data;
     }
+
 
     public function like($id)
     {
@@ -147,9 +129,9 @@ class ProjectController extends Controller
                 ], 404);
             }
             $this->authorize('update', $project);
-            $this->associateData($project, "tags", $request);
-            $this->associateData($project, "technologies", $request);
-            $project->update($request->validated());
+            AssociationController::associateData($project, "tags", $request);
+            AssociationController::associateData($project, "technologies", $request);
+            $project->update($this->normalizeData($request->validated()));
             DB::commit();
             return response()->json([
                 'message' => 'success',

@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\JobController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,25 +24,45 @@ Route::get("/", function () {
 });
 
 // auth routes
-Route::post("/register", [\App\Http\Controllers\AuthController::class, "register"]);
-Route::post("/login", [\App\Http\Controllers\AuthController::class, "login"]);
+Route::post("/register", [AuthController::class, "register"]);
+Route::post("/login", [AuthController::class, "login"]);
 
 $freeResourceRoutes = [
     "show",
     "index",
 ];
 
-Route::resource("/projects", \App\Http\Controllers\ProjectController::class)->only($freeResourceRoutes);
+Route::resource("/projects", ProjectController::class)->only($freeResourceRoutes);
+Route::resource("/jobs", JobController::class)->only($freeResourceRoutes);
 
 Route::middleware("auth:sanctum")->group(function () use ($freeResourceRoutes) {
-    Route::get("/logout", [\App\Http\Controllers\AuthController::class, "logout"]);
-    Route::get("/me", [\App\Http\Controllers\AuthController::class, "me"]);
-    Route::resource("/projects",
-        \App\Http\Controllers\ProjectController::class)->except($freeResourceRoutes)->middleware("role:admin|student");
-    Route::get("/projects/{project}/like", [\App\Http\Controllers\ProjectController::class, "like"]);
-    Route::get("/myprojects",
-        [\App\Http\Controllers\UserController::class, "myProjects"])->middleware("role:admin|student");
-    Route::put("/me", [\App\Http\Controllers\UserController::class, "updateProfile"]);
+    Route::get("/logout", [AuthController::class, "logout"]);
+    Route::get("/me", [AuthController::class, "me"]);
+    Route::put("/me", [UserController::class, "updateProfile"]);
+
+
+    $resources = [
+        "/projects" => ProjectController::class,
+        "/jobs" => JobController::class,
+    ];
+
+    foreach ($resources as $resource => $controller) {
+        Route::resource($resource, $controller)
+            ->except($freeResourceRoutes)->middleware("role:admin|".($resource === "/projects" ? ProjectController::$role : JobController::$role));
+    }
+
+
+    Route::get("/projects/{project}/like", [ProjectController::class, "like"]);
+
+    $myRoutes = [
+        "projects",
+        "jobs",
+    ];
+    foreach ($myRoutes as $route) {
+        Route::get("/me/$route", [
+            UserController::class, $route
+        ])->middleware("role:admin|".($route === "projects" ? ProjectController::$role : JobController::$role));
+    }
 });
 
 

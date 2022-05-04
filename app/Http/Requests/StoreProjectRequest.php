@@ -32,8 +32,6 @@ class StoreProjectRequest extends FormRequest
     public function messages()
     {
         return [
-            "tags.*.unique" => "Tag name already exists",
-            "technologies.*.unique" => "Technology name already exists",
             "images.*.ends_with" => "Image must be a valid image",
         ];
 
@@ -47,26 +45,5 @@ class StoreProjectRequest extends FormRequest
         ]);
     }
 
-
-    protected function passedValidation()
-    {
-//        if ($this->has('tags')) {
-//            $this->merge([
-//                "tags" => array_map(function ($tag) {
-//                    return ['name' => strtolower(trim($tag, ' '))];
-//                }, $this->tags),
-//            ]);
-//        }
-//        if ($this->has('technologies')) {
-//            $this->merge([
-//                "technologies" => array_map(function ($technology) {
-//                    return ['name' => strtolower(trim($technology, ' '))];
-//                }, $this->technologies),
-//            ]);
-//        }
-        $this->merge([
-            "images" => json_encode($this->images),
-        ]);
-    }
 
 }

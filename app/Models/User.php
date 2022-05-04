@@ -47,6 +47,11 @@ class User extends Authenticatable
         return $this->hasMany(Project::class);
     }
 
+    public function jobs()
+    {
+        return $this->hasMany(Job::class);
+    }
+
     public function likes()
     {
         return $this->belongsToMany(Project::class, 'likes');
