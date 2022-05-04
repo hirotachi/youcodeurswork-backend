@@ -3,11 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Mews\Purifier\Casts\CleanHtml;
 
 class Project extends Model
 {
+
     protected $fillable = [
         'name', 'description', 'images', 'repo_link', 'user_id'
+    ];
+
+    protected $casts = [
+        "description" => CleanHtml::class,
     ];
 
     protected $hidden = [

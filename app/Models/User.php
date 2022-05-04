@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Mews\Purifier\Casts\CleanHtml;
 
 class User extends Authenticatable
 {
@@ -17,8 +18,9 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name', 'email', 'password'
+        'name', 'email', 'password', 'headline', 'description', 'site', 'social_accounts'
     ];
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -37,6 +39,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        "description" => CleanHtml::class,
     ];
 
     public function projects()

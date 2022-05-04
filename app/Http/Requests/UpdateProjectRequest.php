@@ -19,13 +19,4 @@ class UpdateProjectRequest extends StoreProjectRequest
         ];
     }
 
-    public function prepareForValidation()
-    {
-        if ($this->description) {
-            $this->merge([
-                'description' => strip_tags($this->description),
-            ]);
-        }
-    }
-
 }

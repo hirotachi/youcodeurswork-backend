@@ -44,7 +44,6 @@ class StoreProjectRequest extends FormRequest
     {
         $this->merge([
             'user_id' => auth()->user()->id,
-            'description' => strip_tags($this->description),
         ]);
     }
 

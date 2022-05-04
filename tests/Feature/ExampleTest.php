@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
@@ -17,5 +16,12 @@ class ExampleTest extends TestCase
         $response = $this->get('/');
 
         $response->assertStatus(200);
+    }
+
+    public function test_api_returns_json_welcome_message()
+    {
+        $this->get("/api")->assertJson([
+            "message" => "Welcome to the API"
+        ]);
     }
 }

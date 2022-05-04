@@ -10,6 +10,7 @@ use App\Models\Project;
 use App\Models\Tag;
 use App\Models\Technology;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
 class ProjectController extends Controller
@@ -17,7 +18,18 @@ class ProjectController extends Controller
 
     public function index()
     {
-        return new ProjectCollection(Project::paginate());
+        $projects = Project::where("name", "LIKE", "%".request("q")."%");
+        $relations = ["tags", "technologies"];
+        foreach ($relations as $relation) {
+            if (request()->has($relation) && request($relation) != "") {
+                $projects = $projects->whereHas($relation, function (Builder $query) use ($relation) {
+                    $arr = explode(",", request($relation));
+                    $query->whereIn("name", $arr);
+                });
+            }
+        }
+
+        return new ProjectCollection($projects->paginate(10));
     }
 
     /**
