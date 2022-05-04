@@ -21,6 +21,8 @@ class ProjectResource extends JsonResource
             'images' => json_decode((string) $this->images),
             'tags' => TagResource::collection($this->tags),
             'technologies' => TechnologyResource::collection($this->technologies),
+            "likesCount" => $this->likers()->count(),
+            "liked" => $this->likers()->where('user_id', auth()->id())->exists(),
             'repo_link' => $this->repo_link,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

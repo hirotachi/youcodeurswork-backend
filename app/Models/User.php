@@ -46,4 +46,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Project::class);
     }
+
+    public function likes()
+    {
+        return $this->belongsToMany(Project::class, 'likes');
+    }
 }

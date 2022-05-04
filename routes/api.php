@@ -30,11 +30,15 @@ $freeResourceRoutes = [
 
 Route::resource("/projects", \App\Http\Controllers\ProjectController::class)->only($freeResourceRoutes);
 
-
 Route::middleware("auth:sanctum")->group(function () use ($freeResourceRoutes) {
     Route::get("/logout", [\App\Http\Controllers\AuthController::class, "logout"]);
     Route::get("/me", [\App\Http\Controllers\AuthController::class, "me"]);
-    Route::resource("/projects", \App\Http\Controllers\ProjectController::class)->except($freeResourceRoutes);
+    Route::resource("/projects",
+        \App\Http\Controllers\ProjectController::class)->except($freeResourceRoutes)->middleware("role:admin|student");
+    Route::get("/projects/{project}/like", [\App\Http\Controllers\ProjectController::class, "like"]);
+    Route::get("/myprojects",
+        [\App\Http\Controllers\UserController::class, "myProjects"])->middleware("role:admin|student");
+
 });
 
 

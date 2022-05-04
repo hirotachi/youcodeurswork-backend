@@ -40,4 +40,12 @@ class Project extends Model
     {
         return $this->morphToMany(Technology::class, 'technologyable');
     }
+
+    /**
+     * Get All likes for the project.
+     */
+    public function likers()
+    {
+        return $this->belongsToMany(User::class, 'likes');
+    }
 }

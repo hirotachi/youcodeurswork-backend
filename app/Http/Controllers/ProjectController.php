@@ -12,6 +12,7 @@ use App\Models\Technology;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use function PHPUnit\Framework\stringContains;
 
 class ProjectController extends Controller
 {
@@ -78,6 +79,31 @@ class ProjectController extends Controller
         $ids = $data->pluck('id')->toArray();
         $project->{$key}()->sync($ids);
     }
+
+    public function like($id)
+    {
+        try {
+            $project = Project::findOrFail($id);
+            $userId = auth()->id();
+            $project->likers()->toggle($userId);
+            $project->refresh();
+            return response()->json([
+                'message' => 'success',
+                'project' => new ProjectResource($project),
+            ], 201);
+        } catch (\Exception $e) {
+            $message = $e->getMessage();
+            $code = 500;
+            if (stringContains($message, "No query results")) {
+                $message = 'Project not found';
+                $code = 404;
+            }
+            return response()->json([
+                'message' => $message,
+            ], $code);
+        }
+    }
+
 
     public function show($id)
     {
