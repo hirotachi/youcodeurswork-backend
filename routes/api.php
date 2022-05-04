@@ -23,9 +23,18 @@ Route::get("/", function () {
 Route::post("/register", [\App\Http\Controllers\AuthController::class, "register"]);
 Route::post("/login", [\App\Http\Controllers\AuthController::class, "login"]);
 
-Route::middleware("auth:sanctum")->group(function () {
+$freeResourceRoutes = [
+    "show",
+    "index",
+];
+
+Route::resource("/projects", \App\Http\Controllers\ProjectController::class)->only($freeResourceRoutes);
+
+
+Route::middleware("auth:sanctum")->group(function () use ($freeResourceRoutes) {
     Route::get("/logout", [\App\Http\Controllers\AuthController::class, "logout"]);
     Route::get("/me", [\App\Http\Controllers\AuthController::class, "me"]);
+    Route::resource("/projects", \App\Http\Controllers\ProjectController::class)->except($freeResourceRoutes);
 });
 
 

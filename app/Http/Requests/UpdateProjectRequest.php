@@ -2,20 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class UpdateProjectRequest extends FormRequest
+class UpdateProjectRequest extends StoreProjectRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return false;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -23,8 +11,21 @@ class UpdateProjectRequest extends FormRequest
      */
     public function rules()
     {
+        $rules = parent::rules();
+        unset($rules['user_id']);
         return [
-            //
+            ...$rules,
+            "name" => "string|max:120",
         ];
     }
+
+    public function prepareForValidation()
+    {
+        if ($this->description) {
+            $this->merge([
+                'description' => strip_tags($this->description),
+            ]);
+        }
+    }
+
 }
