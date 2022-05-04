@@ -15,10 +15,16 @@ class JobResource extends JsonResource
      */
     public function toArray($request)
     {
+//         remove new lines and spaces
+        $description = preg_replace('/\s+/', ' ', strip_tags($this->description));
+        $maxLength = 300;
+        if (strlen($description) > $maxLength) {
+            $description = substr($description, 0, $maxLength).'...';
+        }
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'description' => $this->description,
+            'description' => $this->when($request->route()->job == $this->id, $this->description, $description),
             'location' => $this->location,
             'image' => $this->image,
             'type' => $this->type,

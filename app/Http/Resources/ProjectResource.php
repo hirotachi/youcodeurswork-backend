@@ -14,10 +14,11 @@ class ProjectResource extends JsonResource
      */
     public function toArray($request)
     {
+
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'description' => $this->description,
+            'description' => $this->when($request->route()->project == $this->id, $this->description),
             'images' => is_string($this->images) ? json_decode($this->images) : $this->images,
             "creator" => new UserResource($this->user),
             'tags' => TagResource::collection($this->tags),
