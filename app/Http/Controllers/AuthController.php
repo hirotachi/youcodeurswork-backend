@@ -15,13 +15,6 @@ class AuthController extends Controller
     public function register(Request $request)
     {
 
-        $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|string|email|unique:users',
-            'password' => 'required|string',
-            "role" => "required|string|in:student,recruiter"
-        ]);
-
 
         $user = new User([
             'name' => $request->name,
@@ -29,7 +22,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
             "role" => $request->role
         ]);
-        
+
         $user->save();
         $token = $user->createToken("access_token")->plainTextToken;
 

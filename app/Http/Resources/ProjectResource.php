@@ -18,7 +18,7 @@ class ProjectResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'images' => json_decode((string) $this->images),
+            'images' => $this->images,
             'tags' => TagResource::collection($this->tags),
             'technologies' => TechnologyResource::collection($this->technologies),
             "likesCount" => $this->likers()->count(),

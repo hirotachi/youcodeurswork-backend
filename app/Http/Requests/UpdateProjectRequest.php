@@ -15,7 +15,7 @@ class UpdateProjectRequest extends StoreProjectRequest
         unset($rules['user_id']);
         return [
             ...$rules,
-            "name" => "string|max:120",
+            "name" => "string|max:120|min:5",
         ];
     }
 

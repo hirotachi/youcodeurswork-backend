@@ -43,9 +43,9 @@ class ProjectController extends Controller
     {
         try {
             DB::beginTransaction();
-            $project = Project::create($request->all());
-            $this->associateData($project, "tags", $request);
-            $this->associateData($project, "technologies", $request);
+            $project = Project::create($request->validated());
+            self::associateData($project, "tags", $request);
+            self::associateData($project, "technologies", $request);
             DB::commit();
             return response()->json([
                 'message' => 'success',
@@ -60,12 +60,20 @@ class ProjectController extends Controller
         }
     }
 
-    private function associateData($project, $key, StoreProjectRequest $request)
+    static public function associateData($project, $key, $request)
     {
-        $data = $request->input($key);
-        if (!$data) {
+        $data = $request->validated($key);
+        if ($data === null) {
             return;
         }
+        if (count($data) === 0) {
+            $project->{$key}()->sync($data);
+            return;
+        }
+        $data = array_map(function ($item) {
+            return ["name" => strtolower(trim($item, " "))];
+        }, $data);
+
         $request->offsetUnset($key);
         if ($key === 'tags') {
             Tag::upsert($data, ['name']);
@@ -141,7 +149,7 @@ class ProjectController extends Controller
             $this->authorize('update', $project);
             $this->associateData($project, "tags", $request);
             $this->associateData($project, "technologies", $request);
-            $project->update($request->all());
+            $project->update($request->validated());
             DB::commit();
             return response()->json([
                 'message' => 'success',
