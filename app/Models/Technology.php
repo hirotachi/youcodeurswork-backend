@@ -15,4 +15,12 @@ class Technology extends Model
     {
         return $this->morphedByMany(Project::class, "technologyable");
     }
+
+    /**
+     * Get all jobs that use this technology.
+     */
+    public function jobs()
+    {
+        return $this->morphedByMany(Job::class, "technologyable");
+    }
 }

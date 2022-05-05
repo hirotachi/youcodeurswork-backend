@@ -13,6 +13,20 @@ class TechnologyResource extends JsonResource
      */
     public function toArray($request)
     {
+        if ($request->routeIs("projects.technologies")) {
+            return [
+                'id' => $this->id,
+                'name' => $this->name,
+                "projects_count" => $this->projects()->count(),
+            ];
+        }
+        if ($request->routeIs("jobs.technologies")) {
+            return [
+                'id' => $this->id,
+                'name' => $this->name,
+                "jobs_count" => $this->jobs()->count(),
+            ];
+        }
         return $this->name;
     }
 }

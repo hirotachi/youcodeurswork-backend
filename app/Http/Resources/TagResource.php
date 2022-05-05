@@ -13,6 +13,21 @@ class TagResource extends JsonResource
      */
     public function toArray($request)
     {
+        if ($request->routeIs("projects.tags")) {
+            return [
+                'id' => $this->id,
+                'name' => $this->name,
+                "projects_count" => $this->projects()->count(),
+            ];
+        }
+        if ($request->routeIs("jobs.tags")) {
+            return [
+                'id' => $this->id,
+                'name' => $this->name,
+                "jobs_count" => $this->jobs()->count(),
+            ];
+        }
+
         return $this->name;
     }
 }

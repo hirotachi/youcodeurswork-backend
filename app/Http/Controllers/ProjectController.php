@@ -6,7 +6,11 @@ use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Resources\ProjectCollection;
 use App\Http\Resources\ProjectResource;
+use App\Http\Resources\TagCollection;
+use App\Http\Resources\TechnologyCollection;
 use App\Models\Project;
+use App\Models\Tag;
+use App\Models\Technology;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
@@ -181,5 +185,15 @@ class ProjectController extends Controller
                 'error' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    public function tags()
+    {
+        return new TagCollection(Tag::has('projects')->get());
+    }
+
+    public function technologies()
+    {
+        return new TechnologyCollection(Technology::has('projects')->get());
     }
 }

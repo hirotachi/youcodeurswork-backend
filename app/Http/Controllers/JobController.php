@@ -6,7 +6,11 @@ use App\Http\Requests\StoreJobRequest;
 use App\Http\Requests\UpdateJobRequest;
 use App\Http\Resources\JobCollection;
 use App\Http\Resources\JobResource;
+use App\Http\Resources\TagCollection;
+use App\Http\Resources\TechnologyCollection;
 use App\Models\Job;
+use App\Models\Tag;
+use App\Models\Technology;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
@@ -149,5 +153,15 @@ class JobController extends Controller
                 'error' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    public function tags()
+    {
+        return new TagCollection(Tag::has('jobs')->get());
+    }
+
+    public function technologies()
+    {
+        return new TechnologyCollection(Technology::has('jobs')->get());
     }
 }

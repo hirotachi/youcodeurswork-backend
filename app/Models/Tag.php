@@ -16,4 +16,12 @@ class Tag extends Model
     {
         return $this->morphedByMany(Project::class, 'taggable');
     }
+
+    /**
+     * Get all jobs that are tagged with this tag.
+     */
+    public function jobs()
+    {
+        return $this->morphedByMany(Job::class, 'taggable');
+    }
 }

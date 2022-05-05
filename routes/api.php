@@ -32,33 +32,37 @@ $freeResourceRoutes = [
     "index",
 ];
 
-Route::resource("/projects", ProjectController::class)->only($freeResourceRoutes);
-Route::resource("/jobs", JobController::class)->only($freeResourceRoutes);
+$resources = [
+    "projects" => ProjectController::class,
+    "jobs" => JobController::class,
+];
 
-Route::middleware("auth:sanctum")->group(function () use ($freeResourceRoutes) {
+foreach ($resources as $resource => $controller) {
+    Route::get("/$resource/tags", [$controller, "tags"])->name("$resource.tags");
+    Route::get("/$resource/technologies", [$controller, "technologies"])->name("$resource.technologies");
+    Route::resource("/$resource", $controller)->only($freeResourceRoutes);
+
+}
+
+
+Route::middleware("auth:sanctum")->group(function () use ($resources, $freeResourceRoutes) {
     Route::get("/logout", [AuthController::class, "logout"]);
     Route::get("/me", [AuthController::class, "me"]);
     Route::put("/me", [UserController::class, "updateProfile"]);
 
 
-    $resources = [
-        "/projects" => ProjectController::class,
-        "/jobs" => JobController::class,
-    ];
-
     foreach ($resources as $resource => $controller) {
-        Route::resource($resource, $controller)
+
+
+        Route::resource("/$resource", $controller)
             ->except($freeResourceRoutes)->middleware("role:admin|".($resource === "/projects" ? ProjectController::$role : JobController::$role));
     }
 
 
     Route::get("/projects/{project}/like", [ProjectController::class, "like"]);
 
-    $myRoutes = [
-        "projects",
-        "jobs",
-    ];
-    foreach ($myRoutes as $route) {
+
+    foreach ($resources as $route => $controller) {
         Route::get("/me/$route", [
             UserController::class, $route
         ])->middleware("role:admin|".($route === "projects" ? ProjectController::$role : JobController::$role));
