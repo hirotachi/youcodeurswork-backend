@@ -21,24 +21,24 @@ class JobResource extends JsonResource
         if (strlen($description) > $maxLength) {
             $description = substr($description, 0, $maxLength).'...';
         }
+        $showMore = $request->routeIs("jobs.show");
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'description' => $this->when($request->route()->job == $this->id, $this->description, $description),
+            'description' => $this->when($showMore, $this->description, $description),
             'location' => $this->location,
-            'image' => $this->image,
+            'image' => $this->when($showMore, $this->image),
             'type' => $this->type,
             'user' => new UserResource($this->user),
-            "tags" => TagResource::collection($this->tags),
-            "technologies" => TechnologyResource::collection($this->technologies),
+            "tags" => $this->when($showMore, TagResource::collection($this->tags)),
+            "technologies" => $this->when($showMore, TechnologyResource::collection($this->technologies)),
             'company_name' => $this->company_name,
-            'company_site' => $this->company_site,
-            'apply_by' => $this->apply_by,
-            "apply_to" => $this->apply_to,
+            'company_site' => $this->when($showMore, $this->company_site),
+            'apply_by' => $this->when($showMore, $this->apply_by),
+            "apply_to" => $this->when($showMore, $this->apply_to),
             'company_logo' => $this->company_logo,
             'remote' => $this->remote,
             'created_at' => Helpers::time_elapsed_string($this->created_at),
-            'updated_at' => $this->updated_at,
         ];
     }
 }

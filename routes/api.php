@@ -67,7 +67,7 @@ Route::middleware("auth:sanctum")->group(function () use ($resources, $freeResou
     foreach ($resources as $route => $controller) {
         Route::get("/me/$route", [
             UserController::class, "my".ucfirst($route)
-        ])->middleware("role:admin|".($route === "projects" ? ProjectController::$role : JobController::$role));
+        ])->name("me.$route")->middleware("role:admin|".($route === "projects" ? ProjectController::$role : JobController::$role));
     }
 });
 

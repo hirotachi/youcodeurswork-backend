@@ -14,20 +14,21 @@ class ProjectResource extends JsonResource
      */
     public function toArray($request)
     {
+        $showMore = $request->routeIs("projects.show");
 
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'description' => $this->when($request->route()->project == $this->id, $this->description),
+            'description' => $this->when($showMore, $this->description),
             'images' => is_string($this->images) ? json_decode($this->images) : $this->images,
             "creator" => new UserResource($this->user),
-            'tags' => TagResource::collection($this->tags),
-            'technologies' => TechnologyResource::collection($this->technologies),
+            'tags' => $this->when($showMore, TagResource::collection($this->tags)),
+            'technologies' => $this->when($showMore, TechnologyResource::collection($this->technologies),
+                TechnologyResource::collection($this->technologies()->limit(3)->get())),
             "likesCount" => $this->likers()->count(),
             "liked" => $this->likers()->where('user_id', auth()->id())->exists(),
-            'repo_link' => $this->repo_link,
+            'repo_link' => $this->when($showMore, $this->repo_link),
             'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
         ];
     }
 }
