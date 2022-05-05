@@ -13,6 +13,11 @@ class StoreJobRequest extends FormRequest
      */
     public function rules()
     {
+        $applyTo = "required|url";
+        if ($this->apply_by === "email") {
+            $applyTo = "required|email";
+        }
+
         return [
             'title' => 'required|string|max:120|min:5',
             'description' => 'required|string|max:10000|min:10',
@@ -24,6 +29,7 @@ class StoreJobRequest extends FormRequest
             'company_site' => 'required|url',
             'apply_by' => 'required|in:email,url',
             'company_logo' => 'string|nullable|ends_with:.jpg,.jpeg,.png,.gif',
+            "apply_to" => $applyTo,
             'remote' => 'required|boolean',
             "tags" => 'array',
             "tags.*" => 'string|required|max:20|min:1',
@@ -31,6 +37,7 @@ class StoreJobRequest extends FormRequest
             "technologies.*" => 'string|required|max:25|min:1',
         ];
     }
+
 
     protected function prepareForValidation()
     {

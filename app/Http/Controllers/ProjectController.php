@@ -19,7 +19,7 @@ class ProjectController extends Controller
 
     public function index()
     {
-        $projects = Project::where("name", "LIKE", "%".request("q")."%");
+        $projects = Project::where("name", "LIKE", "%".request("q")."%")->orderByDesc("created_at");
         $relations = ["tags", "technologies"];
         foreach ($relations as $relation) {
             if (request()->has($relation) && request($relation) != "") {

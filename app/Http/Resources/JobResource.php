@@ -34,6 +34,7 @@ class JobResource extends JsonResource
             'company_name' => $this->company_name,
             'company_site' => $this->company_site,
             'apply_by' => $this->apply_by,
+            "apply_to" => $this->apply_to,
             'company_logo' => $this->company_logo,
             'remote' => $this->remote,
             'created_at' => Helpers::time_elapsed_string($this->created_at),
