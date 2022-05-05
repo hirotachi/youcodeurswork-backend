@@ -22,7 +22,12 @@ class JobController extends Controller
      */
     public function index()
     {
-        $jobs = Job::where("title", "LIKE", "%".request("q")."%");
+        $query = request("q");
+        $jobs = Job::where("title", "LIKE", "%$query%");
+        $filters = ["company_name", "location"];
+        foreach ($filters as $filter) {
+            $jobs = $jobs->orWhere($filter, "LIKE", "%$query%");
+        }
         $relations = ["tags", "technologies"];
         foreach ($relations as $relation) {
             if (request()->has($relation) && request($relation) != "") {
