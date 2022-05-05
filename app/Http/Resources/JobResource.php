@@ -27,6 +27,7 @@ class JobResource extends JsonResource
             'title' => $this->title,
             'description' => $this->when($showMore, $this->description, $description),
             'location' => $this->location,
+            "category" => $this->category,
             'image' => $this->when($showMore, $this->image),
             'type' => $this->type,
             'user' => new UserResource($this->user),

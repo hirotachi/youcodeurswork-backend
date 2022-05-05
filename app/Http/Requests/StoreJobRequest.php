@@ -30,6 +30,7 @@ class StoreJobRequest extends FormRequest
             'apply_by' => 'required|in:email,url',
             'company_logo' => 'string|nullable|ends_with:.jpg,.jpeg,.png,.gif',
             "apply_to" => $applyTo,
+            "category" => "required|in:programming,other,design",
             'remote' => 'required|boolean',
             "tags" => 'array',
             "tags.*" => 'string|required|max:20|min:1',

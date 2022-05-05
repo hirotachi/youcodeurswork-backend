@@ -26,12 +26,30 @@ class JobController extends Controller
      */
     public function index()
     {
-        $query = request("q");
-        $jobs = Job::where("title", "LIKE", "%$query%");
-        $filters = ["company_name", "location"];
-        foreach ($filters as $filter) {
-            $jobs = $jobs->orWhere($filter, "LIKE", "%$query%");
+        $jobs = Job::query();
+        $AndFilters = ["type", "category", "remote"];
+        foreach ($AndFilters as $filter) {
+            if (request()->has($filter)) {
+                $val = request($filter);
+                if ($val === "true") {
+                    $val = true;
+                } elseif ($val === "false") {
+                    $val = false;
+                }
+
+                $jobs = $jobs->where($filter, $val);
+            }
         }
+        if (request()->has("q")) {
+            $jobs = $jobs->where(function (Builder $query) {
+                $q = request("q");
+                $orFilters = ["company_name", "location", "title"];
+                foreach ($orFilters as $filter) {
+                    $query->orWhere($filter, "LIKE", "%$q%");
+                }
+            });
+        }
+
         $relations = ["tags", "technologies"];
         foreach ($relations as $relation) {
             if (request()->has($relation) && request($relation) != "") {
@@ -122,7 +140,7 @@ class JobController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Job  $job
+     * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)

@@ -12,7 +12,7 @@ class Job extends Model
 
     protected $fillable = [
         'title', 'description', 'location', 'image', 'type', 'user_id', 'company_name', 'company_site', 'apply_by',
-        'company_logo', 'remote', "apply_to"
+        'company_logo', 'remote', "apply_to", 'category'
     ];
 
     protected $hidden = [
