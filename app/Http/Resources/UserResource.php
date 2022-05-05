@@ -13,15 +13,17 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
+
+        $showMore = $request->routeIs(["me", "users.show", "user.updateProfile"]);
         return [
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->when(auth()->id() === $this->id, $this->email),
-            "site" => $this->site,
+            "site" => $this->when($showMore, $this->site),
             "avatar" => $this->avatar,
-            "description" => $this->description,
-            "social_accounts" => json_decode($this->social_accounts),
-            "headline" => $this->headline ?? $this->role,
+            "description" => $this->when($showMore, $this->description),
+            "social_accounts" => $this->when($showMore, json_decode($this->social_accounts)),
+            "headline" => $this->when($showMore, $this->headline ?? $this->role),
         ];
     }
 }
