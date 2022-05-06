@@ -2,12 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TagCollection;
+use App\Http\Resources\TechnologyCollection;
 use App\Models\Tag;
 use App\Models\Technology;
 
-class AssociationController extends Controller
+/**
+ * Common controllers functionalities
+ *
+ */
+trait CommonTrait
 {
-    static public function associateData($project, $key, $request)
+    private function table()
+    {
+        return "table";
+    }
+
+    public function associateData($project, $key, $request)
     {
         $data = $request->validated($key);
         if ($data === null) {
@@ -33,5 +44,15 @@ class AssociationController extends Controller
         }
         $ids = $data->pluck('id')->toArray();
         $project->{$key}()->sync($ids);
+    }
+
+    public function tags()
+    {
+        return new TagCollection(Tag::has($this->table())->paginate(10));
+    }
+
+    public function technologies()
+    {
+        return new TechnologyCollection(Technology::has($this->table())->paginate(10));
     }
 }

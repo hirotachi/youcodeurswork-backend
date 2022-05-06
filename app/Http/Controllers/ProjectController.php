@@ -6,11 +6,7 @@ use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Resources\ProjectCollection;
 use App\Http\Resources\ProjectResource;
-use App\Http\Resources\TagCollection;
-use App\Http\Resources\TechnologyCollection;
 use App\Models\Project;
-use App\Models\Tag;
-use App\Models\Technology;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +15,15 @@ use function PHPUnit\Framework\stringContains;
 class ProjectController extends Controller
 {
 
+    use CommonTrait;
+
+
     static public string $role = 'student';
+
+    private function table()
+    {
+        return (new Project())->getTable();
+    }
 
     public function index()
     {
@@ -49,8 +53,8 @@ class ProjectController extends Controller
             DB::beginTransaction();
 
             $project = Project::create($this->normalizeData($request->validated()));
-            AssociationController::associateData($project, "tags", $request);
-            AssociationController::associateData($project, "technologies", $request);
+            $this->associateData($project, "tags", $request);
+            $this->associateData($project, "technologies", $request);
             DB::commit();
             return response()->json([
                 'message' => 'success',
@@ -121,8 +125,6 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, int $id)
     {
-
-
         try {
             DB::beginTransaction();
             try {
@@ -133,8 +135,8 @@ class ProjectController extends Controller
                 ], 404);
             }
             $this->authorize('update', $project);
-            AssociationController::associateData($project, "tags", $request);
-            AssociationController::associateData($project, "technologies", $request);
+            $this->associateData($project, "tags", $request);
+            $this->associateData($project, "technologies", $request);
             $project->update($this->normalizeData($request->validated()));
             DB::commit();
             return response()->json([
@@ -187,13 +189,5 @@ class ProjectController extends Controller
         }
     }
 
-    public function tags()
-    {
-        return new TagCollection(Tag::has('projects')->get());
-    }
 
-    public function technologies()
-    {
-        return new TechnologyCollection(Technology::has('projects')->get());
-    }
 }

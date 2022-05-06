@@ -6,18 +6,21 @@ use App\Http\Requests\StoreJobRequest;
 use App\Http\Requests\UpdateJobRequest;
 use App\Http\Resources\JobCollection;
 use App\Http\Resources\JobResource;
-use App\Http\Resources\TagCollection;
-use App\Http\Resources\TechnologyCollection;
 use App\Models\Job;
-use App\Models\Tag;
-use App\Models\Technology;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
 class JobController extends Controller
 {
+    use CommonTrait;
+
     static public string $role = 'recruiter';
+
+    private function table()
+    {
+        return (new Job())->getTable();
+    }
 
     /**
      * Display a listing of the resource.
@@ -78,8 +81,8 @@ class JobController extends Controller
         try {
             DB::beginTransaction();
             $job = Job::create($request->validated());
-            AssociationController::associateData($job, "tags", $request);
-            AssociationController::associateData($job, "technologies", $request);
+            $this->associateData($job, "tags", $request);
+            $this->associateData($job, "technologies", $request);
             DB::commit();
             return response()->json([
                 'message' => 'success',
@@ -124,8 +127,8 @@ class JobController extends Controller
                 ], 404);
             }
             $this->authorize('update', $job);
-            AssociationController::associateData($job, "tags", $request);
-            AssociationController::associateData($job, "technologies", $request);
+            $this->associateData($job, "tags", $request);
+            $this->associateData($job, "technologies", $request);
             $job->update($request->validated());
             DB::commit();
             return response()->json([
@@ -175,15 +178,5 @@ class JobController extends Controller
                 'error' => $e->getMessage(),
             ], 500);
         }
-    }
-
-    public function tags()
-    {
-        return new TagCollection(Tag::has('jobs')->get());
-    }
-
-    public function technologies()
-    {
-        return new TechnologyCollection(Technology::has('jobs')->get());
     }
 }
