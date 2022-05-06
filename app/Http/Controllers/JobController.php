@@ -26,7 +26,7 @@ class JobController extends Controller
      */
     public function index()
     {
-        $jobs = Job::query();
+        $jobs = Job::query()->orderByDesc('created_at');
         $AndFilters = ["type", "category", "remote"];
         foreach ($AndFilters as $filter) {
             if (request()->has($filter)) {
@@ -140,7 +140,7 @@ class JobController extends Controller
             ], 500);
         }
     }
-    
+
     private function model(): Model
     {
         return new Job();
