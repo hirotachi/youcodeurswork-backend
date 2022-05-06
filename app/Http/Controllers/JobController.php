@@ -40,10 +40,14 @@ class JobController extends Controller
                 $jobs = $jobs->where($filter, $val);
             }
         }
+        if (request()->has("location")) {
+            $location = request("location");
+            $jobs = $jobs->where("location", "like", "%$location%");
+        }
         if (request()->has("q")) {
             $jobs = $jobs->where(function (Builder $query) {
                 $q = request("q");
-                $orFilters = ["company_name", "location", "title"];
+                $orFilters = ["company_name", "title"];
                 foreach ($orFilters as $filter) {
                     $query->orWhere($filter, "LIKE", "%$q%");
                 }
