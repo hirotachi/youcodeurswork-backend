@@ -9,6 +9,7 @@ use App\Http\Resources\ProjectResource;
 use App\Models\Project;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use function PHPUnit\Framework\stringContains;
 
@@ -20,10 +21,11 @@ class ProjectController extends Controller
 
     static public string $role = 'student';
 
-    private function table()
+    private function model(): Model
     {
-        return (new Project())->getTable();
+        return new Project();
     }
+
 
     public function index()
     {
@@ -143,43 +145,6 @@ class ProjectController extends Controller
                 'message' => 'success',
                 'project' => new ProjectResource($project),
             ], 200);
-        } catch (AuthorizationException $e) {
-            DB::rollBack();
-            return response()->json([
-                'message' => 'error',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy($id)
-    {
-
-        try {
-            DB::beginTransaction();
-            try {
-                $project = Project::firstOrFail($id);
-                $project->technologies()->detach();
-                $project->tags()->detach();
-            } catch (\Exception $e) {
-                return response()->json([
-                    'message' => 'Project not found',
-                ], 404);
-            }
-            $this->authorize('delete', $project);
-            $project->delete();
-            DB::commit();
-            return response()->json(
-                [
-                    'message' => 'success',
-                ]
-                , 204);
         } catch (AuthorizationException $e) {
             DB::rollBack();
             return response()->json([

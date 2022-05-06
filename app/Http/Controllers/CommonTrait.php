@@ -6,6 +6,9 @@ use App\Http\Resources\TagCollection;
 use App\Http\Resources\TechnologyCollection;
 use App\Models\Tag;
 use App\Models\Technology;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Common controllers functionalities
@@ -13,10 +16,7 @@ use App\Models\Technology;
  */
 trait CommonTrait
 {
-    private function table()
-    {
-        return "table";
-    }
+    abstract private function model(): Model;
 
     public function associateData($project, $key, $request)
     {
@@ -48,11 +48,43 @@ trait CommonTrait
 
     public function tags()
     {
-        return new TagCollection(Tag::has($this->table())->paginate(10));
+        return new TagCollection(Tag::has($this->model()->getTable())->paginate(10));
     }
 
     public function technologies()
     {
-        return new TechnologyCollection(Technology::has($this->table())->paginate(10));
+        return new TechnologyCollection(Technology::has($this->model()->getTable())->paginate(10));
+    }
+
+    public function destroy($id)
+    {
+        $array = explode('\\', get_class($this->model()));
+        $entityName = array_pop($array);
+        try {
+            DB::beginTransaction();
+            try {
+                $entity = $this->model()->findOrFail($id);
+                $entity->technologies()->detach();
+                $entity->tags()->detach();
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => "$entityName not found",
+                ], 404);
+            }
+            $this->authorize('delete', $entity);
+            $entity->delete();
+            DB::commit();
+        } catch (AuthorizationException $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'error',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+        return response()->json(
+            [
+                'message' => 'success',
+            ]
+            , 200);
     }
 }

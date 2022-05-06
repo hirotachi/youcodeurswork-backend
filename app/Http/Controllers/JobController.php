@@ -9,6 +9,7 @@ use App\Http\Resources\JobResource;
 use App\Models\Job;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class JobController extends Controller
@@ -17,10 +18,6 @@ class JobController extends Controller
 
     static public string $role = 'recruiter';
 
-    private function table()
-    {
-        return (new Job())->getTable();
-    }
 
     /**
      * Display a listing of the resource.
@@ -143,40 +140,9 @@ class JobController extends Controller
             ], 500);
         }
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy($id)
+    
+    private function model(): Model
     {
-        try {
-            DB::beginTransaction();
-            try {
-                $job = Job::firstOrFail($id);
-                $job->technologies()->detach();
-                $job->tags()->detach();
-            } catch (\Exception $e) {
-                return response()->json([
-                    'message' => 'Job not found',
-                ], 404);
-            }
-            $this->authorize('delete', $job);
-            $job->delete();
-            DB::commit();
-            return response()->json(
-                [
-                    'message' => 'success',
-                ]
-                , 204);
-        } catch (AuthorizationException $e) {
-            DB::rollBack();
-            return response()->json([
-                'message' => 'error',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
+        return new Job();
     }
 }
