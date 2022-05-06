@@ -54,10 +54,8 @@ Route::middleware("auth:sanctum")->group(function () use ($resources, $freeResou
 
 
     foreach ($resources as $resource => $controller) {
-
-
         Route::resource("/$resource", $controller)
-            ->except($freeResourceRoutes)->middleware("role:admin|".($resource === "/projects" ? ProjectController::$role : JobController::$role));
+            ->except($freeResourceRoutes)->middleware("role:admin|".($resource === "projects" ? ProjectController::$role : JobController::$role));
     }
 
 
