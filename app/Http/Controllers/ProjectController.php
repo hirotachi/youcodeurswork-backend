@@ -32,9 +32,9 @@ class ProjectController extends Controller
         $projects = Project::where("name", "LIKE", "%".request("q")."%")->orderByDesc("created_at");
         $relations = ["tags", "technologies"];
         foreach ($relations as $relation) {
-            if (request()->has($relation) && request($relation) != "") {
+            if (request()->query($relation)) {
                 $projects = $projects->whereHas($relation, function (Builder $query) use ($relation) {
-                    $arr = explode(",", request($relation));
+                    $arr = explode(",", request()->query($relation));
                     $query->whereIn("name", $arr);
                 });
             }

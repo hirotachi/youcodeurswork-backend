@@ -29,8 +29,8 @@ class JobController extends Controller
         $jobs = Job::query()->orderByDesc('created_at');
         $AndFilters = ["type", "category", "remote"];
         foreach ($AndFilters as $filter) {
-            if (request()->has($filter)) {
-                $val = request($filter);
+            $val = request()->query($filter);
+            if ($val) {
                 if ($val === "true") {
                     $val = true;
                 } elseif ($val === "false") {
@@ -40,13 +40,13 @@ class JobController extends Controller
                 $jobs = $jobs->where($filter, $val);
             }
         }
-        if (request()->has("location")) {
-            $location = request("location");
+        if (request()->query("location")) {
+            $location = request()->query("location");
             $jobs = $jobs->where("location", "like", "%$location%");
         }
-        if (request()->has("q")) {
+        if (request()->query("q")) {
             $jobs = $jobs->where(function (Builder $query) {
-                $q = request("q");
+                $q = request()->query("q");
                 $orFilters = ["company_name", "title"];
                 foreach ($orFilters as $filter) {
                     $query->orWhere($filter, "LIKE", "%$q%");
@@ -56,9 +56,9 @@ class JobController extends Controller
 
         $relations = ["tags", "technologies"];
         foreach ($relations as $relation) {
-            if (request()->has($relation) && request($relation) != "") {
+            if (request()->query($relation)) {
                 $jobs = $jobs->whereHas($relation, function (Builder $query) use ($relation) {
-                    $arr = explode(",", request($relation));
+                    $arr = explode(",", request()->query($relation));
                     $query->whereIn("name", $arr);
                 });
             }
