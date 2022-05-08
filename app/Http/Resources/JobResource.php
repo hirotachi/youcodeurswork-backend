@@ -16,7 +16,7 @@ class JobResource extends JsonResource
     public function toArray($request)
     {
 //         remove new lines and spaces
-        $description = preg_replace('/\s+/', ' ', strip_tags($this->description));
+        $description = preg_replace('/\s+/', ' ', strip_tags(html_entity_decode($this->description)));
         $maxLength = 300;
         if (strlen($description) > $maxLength) {
             $description = substr($description, 0, $maxLength).'...';
