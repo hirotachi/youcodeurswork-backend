@@ -31,6 +31,8 @@ class AuthController extends Controller
             'message' => 'success',
             'access_token' => $token,
             'token_type' => 'Bearer',
+            "user" => new UserResource($user),
+            "role" => $user->role
         ], 201);
     }
 
@@ -53,6 +55,8 @@ class AuthController extends Controller
             'message' => 'success',
             'access_token' => $token,
             'token_type' => 'Bearer',
+            "user" => new UserResource($user),
+            "role" => $user->role
         ], 200);
     }
 
