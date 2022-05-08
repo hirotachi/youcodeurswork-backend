@@ -40,7 +40,7 @@ $resources = [
 foreach ($resources as $resource => $controller) {
     Route::get("/$resource/tags", [$controller, "tags"])->name("$resource.tags");
     Route::get("/$resource/technologies", [$controller, "technologies"])->name("$resource.technologies");
-    Route::resource("/$resource", $controller)->only($freeResourceRoutes);
+    Route::resource("/$resource", $controller)->only($freeResourceRoutes)->middleware("hasToken");
     Route::get("/users/{user}/$resource", [UserController::class, $resource])->name("users.$resource");
 }
 
@@ -59,7 +59,7 @@ Route::middleware("auth:sanctum")->group(function () use ($resources, $freeResou
     }
 
 
-    Route::get("/projects/{project}/like", [ProjectController::class, "like"]);
+    Route::get("/projects/{project}/like", [ProjectController::class, "like"])->name("projects.like");
 
 
     foreach ($resources as $route => $controller) {
