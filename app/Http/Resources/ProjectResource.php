@@ -26,7 +26,7 @@ class ProjectResource extends JsonResource
             'technologies' => $this->when($showMore, TechnologyResource::collection($this->technologies),
                 TechnologyResource::collection($this->technologies()->limit(3)->get())),
             "likesCount" => $this->likers()->count(),
-            "liked" => $this->when($showMore,
+            "liked" => $this->when(auth()->check(),
                 $this->likers()->where('user_id', auth()->id())->exists()),
             'repo_link' => $this->when($showMore, $this->repo_link),
             'created_at' => $this->created_at,
